@@ -1,0 +1,11 @@
+- hosts: static_servers
+  become: true
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - packages
+    - users
+    - zsh
+    - ssh_hardening
+    - nginx
+    - deploy_static

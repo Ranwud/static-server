@@ -1,0 +1,9 @@
+- name: Configure sshd_config
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      PermitRootLogin no
+      PermitEmptyPasswords no
+      LogLevel VERBOSE
+      X11Forwarding no
+  notify: Reload ssh

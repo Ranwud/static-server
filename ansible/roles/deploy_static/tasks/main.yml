@@ -1,0 +1,27 @@
+- name: Copy static archive
+  copy:
+    src: files/static.zip
+    dest: /tmp/static.zip
+    mode: '0644'
+
+- name: Ensure destination exists
+  file:
+    path: "{{ static_dest }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Unarchive static into destination
+  unarchive:
+    src: /tmp/static.zip
+    dest: "{{ static_dest }}"
+    remote_src: yes
+    creates: "{{ static_dest }}/.deployed"
+  notify:
+    - Reload nginx
+
+- name: Touch marker
+  file:
+    path: "{{ static_dest }}/.deployed"
+    state: touch

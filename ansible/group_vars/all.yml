@@ -1,0 +1,29 @@
+custom_groups:
+  - editors
+  - photographers
+
+users_list:
+  - name: alice
+    shell: /bin/zsh
+    state: present
+    public_key: "ssh-rsa AAAA..."
+    password: "{{ 'password123' | password_hash('sha512') }}"
+    groups: ["editors"]
+  - name: bob
+    shell: /bin/bash
+    state: present
+    public_key: ""
+    password: "{{ 'password123' | password_hash('sha512') }}"
+    groups: ["photographers"]
+
+pkg_list:
+  - htop
+  - ncdu
+  - git
+  - nano
+  - unzip
+  - curl
+
+static_dest: /var/www/static
+static_subpath: images
+static_cache_max_age: 3600

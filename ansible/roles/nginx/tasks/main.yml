@@ -1,0 +1,34 @@
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Ensure directory for static exists
+  file:
+    path: "{{ static_dest }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Deploy nginx site config
+  template:
+    src: nginx-static.j2
+    dest: /etc/nginx/sites-available/static_site
+  notify:
+    - Reload nginx
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/static_site
+    dest: /etc/nginx/sites-enabled/static_site
+    state: link
+  notify:
+    - Restart nginx
+
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - Restart nginx

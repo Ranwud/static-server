@@ -1,0 +1,29 @@
+- name: Ensure custom groups exist
+  group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ custom_groups | default([]) }}"
+
+- name: Manage users
+  block:
+    - name: Ensure user exists / removed
+      user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell | default('/bin/bash') }}"
+        groups: "{{ item.groups | default([]) }}"
+        password: "{{ item.password | default(omit) }}"
+        state: "{{ item.state | default('present') }}"
+        create_home: yes
+      loop: "{{ users_list }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Ensure authorized_key if public_key provided
+      authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ item.public_key }}"
+      when: item.public_key | length > 0
+      loop: "{{ users_list }}"
+      loop_control:
+        label: "{{ item.name }}"
+  when: users_list is defined
