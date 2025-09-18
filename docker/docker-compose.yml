@@ -7,6 +7,6 @@ services:
       args:
         SSH_PUBKEY: ""
     ports:
-      - "2222:22"
-      - "8080:80"
+      - "22:22"
+      - "80:80"
     tty: true
